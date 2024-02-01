@@ -1,0 +1,90 @@
+---
+title: "Formative Assessment 1"
+author: "Vera Aguila"
+date: "2024-02-01"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1. Write the skewness program, and use it to calculate the skewness coefficient of the four examination subjects in results.txt (results.csv). What can you say about these data?
+
+Pearson has given an approximate formula for the skewness that is easier to calculate than the exact formula given in Equation 2.1.
+
+```{r results}
+results <- read.csv("C:/Users/Dell/Downloads/FA1/results.csv",header = T)
+results$gender <- as.factor(results$gender)
+summary(results)
+```
+
+
+SKEWNESS (first method)
+Using the skewness program from the book:
+```{r skewness}
+skew <- function(x) {
+  xbar <- mean(x,na.rm = T)
+  sum2 <- sum((x-xbar)^2, na.rm = T)
+  sum3 <- sum((x-xbar)^3, na.rm = T)
+  skew <- (sqrt(length(x))*sum3)/(sum2^(1.5))
+  skew
+}
+skew(results$arch1)
+skew(results$prog1)
+skew(results$arch2)
+skew(results$prog2)
+```
+
+
+```{r skewness2, echo=FALSE}
+cat("Skewness for Arch1:",skew(results$arch1),"\n")
+cat("Skewness for Prog1:",skew(results$prog1),"\n")
+cat("Skewness for Arch2:",skew(results$arch2),"\n")
+cat("Skewness for Prog2:",skew(results$prog2),"\n")
+```
+
+
+SKEWNESS (second method)
+Using the Pearson's coefficient of skewness:
+```{r pearson}
+skew2 <- function(x) {
+  mn <- mean(x, na.rm = T)
+  md <- median(x, na.rm = T)
+  standev <- sd(x, na.rm = T)
+  skewness <- (3*(mn-md))/standev
+  skewness
+}
+skew2(results$arch1)
+skew2(results$prog1)
+skew2(results$arch2)
+skew2(results$prog2)
+```
+
+
+2.  For the class of 50 students of computing detailed in Exercise 1.1, use R to 
+
+(a)  form the stem-and-leaf display for each gender, and discuss the advantages of this representation compared to the traditional histogram; 
+
+Data:
+Females: 57, 59, 78, 79, 60, 65, 68, 71, 75, 48, 51, 55, 56, 41, 43,
+44, 75, 78, 80, 81, 83, 83, 85
+Males: 48, 49, 49, 30, 30, 31, 32, 35, 37, 41, 86, 42, 51, 53, 56,
+42, 44, 50, 51, 65, 67, 51, 56, 58, 64, 64, 75
+
+```{r stem, echo=FALSE}
+
+females=c(57,59,78,79,60,65,68,71,75,48,51,55,56,41,43,44,75,78,80,81,83,83,85)
+males=c(48,49,49,30,30,31,32,35,37,41,86,42,51,53,56,42,44,50,51,65,67,51,56,58,64,64,75)
+stem(females)
+stem(males)
+boxplot(females,
+        xlab = "females",
+        ylab = "results of examination")
+boxplot(males,
+        xlab = "males",
+        ylab = "results of examination")
+
+```
